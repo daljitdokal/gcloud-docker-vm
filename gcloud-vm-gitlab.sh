@@ -1,10 +1,18 @@
 #!/bin/bash
 
-# Create new VM instance 
-# - Project: gitlab-playground
-# - Zone: australia-southeast1-a
-gcloud config set project gitlab-playground-20201111
-gcloud config set compute/zone australia-southeast1-a
-gcloud compute instances create $1
-sleep 5
-gcloud compute ssh gitlab-playground --ssh-key-file ~/.ssh/$USER
+# =============================================================================
+# AUTHOR: Daljit Singh
+# EMAIL: daljit.dokal@yahoo.co.nz
+# CREATED: 2020-11-25
+# DISCRIPTION: Create new glcoud VM, SSH into new insatnce and Install Docker
+# =============================================================================
+
+# Create new VM
+echo "Creating new VM..."
+sh ./packages/gcloud-create-vm.sh gitlab-playground-20201111 gitlab-playground
+
+# Install Docker
+# echo "Installing docker...."
+# sh ./packages/gcloud-install-docker.sh
+
+# echo "Execution completed!"
