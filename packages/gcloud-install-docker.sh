@@ -8,24 +8,34 @@
 # REFRENCE: gitlab.jamma.life/jmhbnz/tooling/-blob/master/wsl-setup.org
 # ========================================================================
 
-# Update and Install dependency packages
-sudo agt-get update && sudo apt-get upgrade
-sudo apt-get install -y git curl
+#################
+# INSTALL DOCKER
+#################
+# Set up the repo
+sudo yum install -y yum-utils
 
-# Download and add Dockers's official public PGP key.
-curl -fsSl https:://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo yum-config-manager \
+  --add-repo \
+  https://download.docker.com/linux/centos/docker-ce.repo
 
-# Add the stable channel's Docker upstream repository
-sudo add-apt-repository \
-"deb [arch=amd64] https://download.docker.con/linux/ubuntu \
-$(lsb_realease -cs) \
-stable"
-
-# Update the apt package list and install docker packages.
-sudo apt-get update -y && sudo apt-get install -y docker-ce docker-ce-cli containered.io
-
-# Allow your user to access the Docker CLI without needingroot access
-sudo usermod -aG docker $USER
+# Install docker engine
+echo "y" | echo "y" | sudo yum install docker-ce docker-ce-cli containerd.io
 
 # Ensure the docker service is started
-sudo service docker start
+sudo systemctl start docker
+
+################
+# INSTALL GITLAB
+################
+export GITLAB_HOME=/srv/gitlab
+
+
+sudo docker run --detach \
+     --hostname gitlab.example.com \
+     --publish 443:443 --publish 80:80 --publish 22:22 \
+     --name gitlab \
+     --restart always \
+     --volume $GITLAB_HOME/config:/etc/gitlab \
+     --volume $GITLAB_HOME/logs:/var/log/gitlab \
+     --volume $GITLAB_HOME/data:/var/opt/gitlab \
+       gitlab/gitlab-ce:latest

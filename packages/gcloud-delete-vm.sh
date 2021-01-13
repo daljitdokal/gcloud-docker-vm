@@ -13,4 +13,4 @@ echo "Stoping VM.."
 gcloud compute instances stop $1
 
 echo "Deleting VM.."
-echo "Y" | gcloud compute instances delete $1
+echo "y" | gcloud compute instances delete $1
